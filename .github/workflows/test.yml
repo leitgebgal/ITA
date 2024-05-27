@@ -1,9 +1,8 @@
-name: Run Tests
+name: Java CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
@@ -27,5 +26,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Build and run tests
-        run: mvn clean install
+      - name: Build with Maven
+        run: mvn -B package --file user-service/pom.xml
+
+      - name: Run tests
+        run: mvn test --file user-service/pom.xml
+        env:
+          SPRING_DATA_MONGODB_URI: ${{ secrets.SPRING_DATA_MONGODB_URI }}
+          SPRING_DATA_MONGODB_DATABASE: ita
+          SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+          LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB: DEBUG
