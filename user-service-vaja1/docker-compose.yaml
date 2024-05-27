@@ -1,0 +1,19 @@
+version: '1'
+services:
+  users-service:
+    build: .
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb+srv://admin:admin@ita.8sgnezp.mongodb.net/?retryWrites=true&w=majority&appName=ita
+      SPRING_DATA_MONGODB_DATABASE: ita
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB: DEBUG
+      networks: "users-network"
+      container_name: users-service
+volumes:
+  mongodb_data_container:
+
+networks:
+  backend-network:
+    external: true

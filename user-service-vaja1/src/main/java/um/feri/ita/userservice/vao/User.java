@@ -2,27 +2,35 @@ package um.feri.ita.userservice.vao;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import um.feri.ita.userservice.dto.UserRecord;
 
 @Document(collection = "users")
 public class User {
     public User() {}
 
-    public User(um.feri.ita.userservice.dto.User dto) {
+    public User(UserRecord dto) {
         setEmail(dto.email());
         setPassword(dto.password());
         setFirstName(dto.firstName());
         setLastName(dto.lastName());
     }
 
-    public void updateFrom(um.feri.ita.userservice.dto.User dto) {
+    public User(String firstName, String lastName, String email, String password){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public void updateFrom(UserRecord dto) {
         setEmail(dto.email());
         setPassword(dto.password());
         setFirstName(dto.firstName());
         setLastName(dto.lastName());
     }
 
-    public um.feri.ita.userservice.dto.User toDto() {
-        return new um.feri.ita.userservice.dto.User(
+    public UserRecord toDto() {
+        return new UserRecord(
                 getId(),
                 getEmail(),
                 getPassword(),
@@ -64,7 +72,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "Product{" +
+        return "User {" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password=[PROTECTED]" +

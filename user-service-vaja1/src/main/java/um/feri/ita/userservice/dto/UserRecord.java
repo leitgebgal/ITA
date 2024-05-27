@@ -3,7 +3,7 @@ package um.feri.ita.userservice.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public record User(
+public record UserRecord(
         String id,
         String email,
         String password,
