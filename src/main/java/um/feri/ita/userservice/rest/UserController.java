@@ -25,14 +25,20 @@ public class UserController {
 
     @GetMapping
     public List<User> getUsers() {
-        return userService.getUsers();
+        log.info("Retrieving all users");
+        List<User> users = userService.getUsers();
+        log.info("Retrieved all users, count: " + users.size());
+        return users;
     }
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id){
+
         Optional<User> user = userService.getUserById(id);
         return user.map(u -> {
+            log.info("Found user with ID: " + id);
             return ResponseEntity.ok(u);
         }).orElseGet(() -> {
+            log.info("User with ID: " + id + " not found");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         });
     }
@@ -40,6 +46,7 @@ public class UserController {
     @PostMapping("/create")
     public @ResponseBody ResponseEntity<User> createUser(@RequestBody User user) {
         User newUser = userService.createUser(user);
+        log.info("Created a new user with ID: " + newUser.getId());
         return ResponseEntity.ok(newUser);
     }
 
@@ -48,8 +55,10 @@ public class UserController {
         try {
             Optional<User> updatedUserOptional = userService.updateUser(id, updatedUser);
             return updatedUserOptional.map(user -> {
+                log.info("Updated user with ID: " + user.getId());
                 return ResponseEntity.ok(user);
             }).orElseGet(() -> {
+                log.info("User with ID: " + id + " not found for updating");
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             });
         } catch (IllegalArgumentException ex) {
@@ -62,8 +71,10 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
         return userService.getUserById(id).map(user -> {
             userService.deleteUser(id);
+            log.info("Deleted user with ID: " + id);
             return ResponseEntity.ok("User with ID " + id + " successfully deleted.");
         }).orElseGet(() -> {
+            log.info("User with ID: " + id + " not found for deletion");
             return ResponseEntity.badRequest().body("User with ID " + id + " not found for deletion.");
         });
     }

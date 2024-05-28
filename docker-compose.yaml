@@ -4,13 +4,26 @@ services:
     build: .
     ports:
       - "8081:8080"
+    depends_on:
+      - mongodb
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb+srv://admin:admin@ita.8sgnezp.mongodb.net/?retryWrites=true&w=majority&appName=ita
-      SPRING_DATA_MONGODB_DATABASE: ita
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB: DEBUG
-      networks: "users-network"
-      container_name: users-service
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin@mongodb:27017/ita?authSource=admin
+    networks:
+      - users-network
+    container_name: users-service
+
+  mongodb:
+    image: mongo:4.4.6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      ports:
+        - "27018:27017"
+      volumes:
+        - mongodb_data_container:/data/db
+      networks:
+        - users-network
+
 volumes:
   mongodb_data_container:
 

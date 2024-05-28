@@ -3,7 +3,6 @@ package um.feri.ita.userservice.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import um.feri.ita.userservice.dao.UserRepository;
-import um.feri.ita.userservice.dto.UserRecord;
 import um.feri.ita.userservice.vao.User;
 
 import java.util.List;

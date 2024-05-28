@@ -8,6 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:4.4.6
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: admin
+
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,6 +39,9 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
+      - name: Run Docker Compose
+        run: docker-compose -f docker-compose.yaml up -d
+
       - name: Run tests
         run: mvn test --file pom.xml
         env:
@@ -36,3 +49,6 @@ jobs:
           SPRING_DATA_MONGODB_DATABASE: ita
           SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
           LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_MONGODB: DEBUG
+
+      - name: Shutdown Docker Compose
+        run: docker-compose -f docker-compose.yaml down
