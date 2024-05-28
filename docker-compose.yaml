@@ -1,4 +1,4 @@
-version: '1'
+version: '3.8'
 services:
   users-service:
     build: .
@@ -17,12 +17,9 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
-      ports:
-        - "27018:27017"
-      volumes:
-        - mongodb_data_container:/data/db
-      networks:
-        - users-network
+      ports: "27018:27017"
+      volumes: mongodb_data_container:/data/db
+      networks: users-network
 
 volumes:
   mongodb_data_container:
