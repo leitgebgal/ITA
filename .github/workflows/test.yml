@@ -8,17 +8,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="echo 'db.runCommand({ping: 1})' | mongosh"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,25 +29,9 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Build Docker images
-        run: docker-compose build
-
-      - name: Start Docker services
-        run: docker-compose up -d
-
-      - name: Wait for MongoDB to be ready
-        run: |
-          for i in {1..30}; do
-            if docker-compose exec mongo mongosh --eval 'db.runCommand({ ping: 1 })' > /dev/null 2>&1; then
-              echo "MongoDB is ready!"
-              break
-            fi
-            echo "Waiting for MongoDB to be ready..."
-            sleep 2
-          done
-
       - name: Run tests
         run: mvn test
-
-      - name: Stop Docker services
-        run: docker-compose down
+        env:
+          SPRING_DATA_MONGODB_URI: mongodb+srv://admin:admin@ita.8sgnezp.mongodb.net/?retryWrites=true&w=majority&appName=ita&ssl=true
+          SPRING_DATA_MONGODB_DATABASE: ita
+          SERVER_PORT: 8081
